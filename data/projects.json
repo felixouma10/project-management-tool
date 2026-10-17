@@ -1,0 +1,9 @@
+[
+    {
+        "project_id": 1,
+        "title": "CLI Tool",
+        "description": "Build a project management application",
+        "due_date": null,
+        "owner_id": 1
+    }
+]
