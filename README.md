@@ -192,12 +192,13 @@ The current test suite covers model relationships, task status validation, JSON 
 - User authentication and role-based access control are not implemented.
 - Records are identified by numeric IDs; there are no delete commands.
 - Data is stored locally in JSON files rather than a database.
-- Project and task editing commands can be extended in future versions.
+- Editing commands support updating project details and task titles or
+  statuses; deletion is not currently supported.
 - Data files should not be edited while commands are running.
 
 ## Future Improvements
 
-- Add commands to edit and delete projects and tasks.
+- Add commands to delete users, projects, and tasks.
 - Add search by project title and task status.
 - Improve email validation and input validation.
 - Add integration tests for all CLI commands.
@@ -205,7 +206,7 @@ The current test suite covers model relationships, task status validation, JSON 
 
 ## Testing Status
 
-The current development test suite has passed all 14 tests.
+The current development test suite has passed all 18 tests.
 
 ## License
 

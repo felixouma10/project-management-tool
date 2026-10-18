@@ -34,15 +34,13 @@ def add_user(args):
     """Create and save a user."""
     users = load_users()
 
-    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", args.email):
+    if not re.fullmatch(
+        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
+        args.email,
+    ):
         console.print("[red]Please provide a valid email address.[/red]")
         return
-    
-    if not re.fullmatch(
-        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", args.email):
-        console.print("[red]Invalid email address.[/red]")
-        return
-    
+
     if any(user["email"] == args.email for user in users):
         console.print("[red]A user with this email already exists.[/red]")
         return
@@ -83,15 +81,6 @@ def add_project(args):
     if user is None:
         console.print("[red]User not found.[/red]")
         return
-
-    if args.due_date:
-        try:
-            date.fromisoformat(args.due_date)
-        except ValueError:
-            console.print(
-                "[red]Invalid due date. Use YYYY-MM-DD.[/red]"
-            )
-            return
 
     if args.due_date:
         try:

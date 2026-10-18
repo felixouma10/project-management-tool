@@ -32,7 +32,7 @@ def load_data(filename):
 
         return data
 
-    except (json.JSONDecodeError, ValueError) as error:
+    except ValueError as error:
         raise ValueError(
             f"Cannot load {filename}: invalid JSON data."
         ) from error
