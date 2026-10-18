@@ -38,6 +38,11 @@ def add_user(args):
         console.print("[red]Please provide a valid email address.[/red]")
         return
     
+    if not re.fullmatch(
+        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", args.email):
+        console.print("[red]Invalid email address.[/red]")
+        return
+    
     if any(user["email"] == args.email for user in users):
         console.print("[red]A user with this email already exists.[/red]")
         return
@@ -78,6 +83,15 @@ def add_project(args):
     if user is None:
         console.print("[red]User not found.[/red]")
         return
+
+    if args.due_date:
+        try:
+            date.fromisoformat(args.due_date)
+        except ValueError:
+            console.print(
+                "[red]Invalid due date. Use YYYY-MM-DD.[/red]"
+            )
+            return
 
     if args.due_date:
         try:
@@ -211,6 +225,56 @@ def assign_task(args):
     console.print("[green]Contributor assigned successfully.[/green]")
 
 
+def edit_project(args):
+    """Update the supplied fields of an existing project."""
+    projects = load_projects()
+    project = find_record(projects, "project_id", args.project_id)
+
+    if project is None:
+        console.print("[red]Project not found.[/red]")
+        return
+
+    if args.title is not None:
+        project["title"] = args.title
+
+    if args.description is not None:
+        project["description"] = args.description
+
+    if args.due_date is not None:
+        if args.due_date:
+            try:
+                date.fromisoformat(args.due_date)
+            except ValueError:
+                console.print(
+                    "[red]Invalid due date. Use YYYY-MM-DD.[/red]"
+                )
+                return
+
+        project["due_date"] = args.due_date or None
+
+    save_projects(projects)
+    console.print("[green]Project updated successfully.[/green]")
+
+
+def edit_task(args):
+    """Update the title or status of an existing task."""
+    tasks = load_tasks()
+    task = find_record(tasks, "task_id", args.task_id)
+
+    if task is None:
+        console.print("[red]Task not found.[/red]")
+        return
+
+    if args.title is not None:
+        task["title"] = args.title
+
+    if args.status is not None:
+        task["status"] = args.status
+
+    save_tasks(tasks)
+    console.print("[green]Task updated successfully.[/green]")
+
+
 def build_parser():
     """Build the command-line argument parser."""
     parser = argparse.ArgumentParser(
@@ -263,6 +327,29 @@ def build_parser():
     assign_parser.add_argument("--user-id", type=int, required=True)
     assign_parser.set_defaults(func=assign_task)
 
+    edit_project_parser = commands.add_parser(
+        "edit-project", help="Edit an existing project"
+    )
+    edit_project_parser.add_argument(
+        "--project-id", type=int, required=True
+    )
+    edit_project_parser.add_argument("--title")
+    edit_project_parser.add_argument("--description")
+    edit_project_parser.add_argument("--due-date")
+    edit_project_parser.set_defaults(func=edit_project)
+
+    edit_task_parser = commands.add_parser(
+        "edit-task", help="Edit an existing task"
+    )
+    edit_task_parser.add_argument(
+        "--task-id", type=int, required=True
+    )
+    edit_task_parser.add_argument("--title")
+    edit_task_parser.add_argument(
+        "--status", choices=("pending", "in progress", "completed")
+    )
+    edit_task_parser.set_defaults(func=edit_task)
+
     return parser
 
 
@@ -275,7 +362,6 @@ def main():
         args.func(args)
     except (OSError, ValueError) as error:
         console.print(f"[red]Error: {error}[/red]")
-
 
 if __name__ == "__main__":
     main()

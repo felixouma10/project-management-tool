@@ -96,3 +96,99 @@ def test_project_requires_existing_user(monkeypatch, tmp_path, capsys):
 
     assert "User not found" in output
     assert storage.load_projects() == []
+
+    
+def test_edit_project(monkeypatch, tmp_path, capsys):
+    """Verify that a project can be edited."""
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+    )
+
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        ["add-project", "--user-id", "1", "--title", "Original"],
+    )
+
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        [
+            "edit-project",
+            "--project-id", "1",
+            "--title", "Updated Project",
+        ],
+    )
+
+    projects = storage.load_projects()
+    assert projects[0]["title"] == "Updated Project"
+
+
+def test_edit_task(monkeypatch, tmp_path, capsys):
+    """Verify that a task's status can be edited."""
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+    )
+
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        ["add-project", "--user-id", "1", "--title", "CLI Tool"],
+    )
+
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        ["add-task", "--project-id", "1", "--title", "Write tests"],
+    )
+
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        [
+            "edit-task",
+            "--task-id", "1",
+            "--status", "in progress",
+        ],
+    )
+
+    tasks = storage.load_tasks()
+    assert tasks[0]["status"] == "in progress"
+
+def test_rejects_invalid_email(monkeypatch, tmp_path, capsys):
+    """Verify that invalid email addresses are rejected."""
+    output = run_cli(
+        monkeypatch, tmp_path, capsys,
+        [
+            "add-user",
+            "--name", "Alex",
+            "--email", "invalid-email",
+        ],
+    )
+
+    assert "valid email address" in output
+    assert storage.load_users() == []
+
+
+def test_rejects_invalid_project_due_date(
+    monkeypatch, tmp_path, capsys
+):
+    """Verify that invalid project due dates are rejected."""
+    run_cli(
+        monkeypatch, tmp_path, capsys,
+        [
+            "add-user",
+            "--name", "Alex",
+            "--email", "alex@example.com",
+        ],
+    )
+
+    output = run_cli(
+        monkeypatch, tmp_path, capsys,
+        [
+            "add-project",
+            "--user-id", "1",
+            "--title", "CLI Tool",
+            "--due-date", "31/12/2026",
+        ],
+    )
+
+    assert "Invalid due date" in output
+    assert storage.load_projects() == []
