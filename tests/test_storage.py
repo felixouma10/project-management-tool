@@ -8,7 +8,7 @@ def test_save_and_load_data(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "DATA_DIR", tmp_path)
 
     users = [
-        {"user_id": 1, "name": "Alex", "email": "alex@example.com"}
+        {"user_id": 1, "name": "Felix", "email": "felix@moringa.com"}
     ]
 
     storage.save_users(users)
@@ -36,7 +36,7 @@ def test_non_list_json_raises_error(tmp_path, monkeypatch):
     """Verify JSON objects are rejected when a list is expected."""
     monkeypatch.setattr(storage, "DATA_DIR", tmp_path)
     (tmp_path / "users.json").write_text(
-        '{"name": "Alex"}', encoding="utf-8"
+        '{"name": "Felix"}', encoding="utf-8"
     )
 
     with pytest.raises(ValueError, match="invalid JSON"):

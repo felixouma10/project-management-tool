@@ -23,22 +23,22 @@ def test_add_and_list_user(monkeypatch, tmp_path, capsys):
     """Verify the CLI can create and list a user."""
     run_cli(
         monkeypatch, tmp_path, capsys,
-        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+        ["add-user", "--name", "Felix", "--email", "felix@moringa.com"],
     )
 
     output = run_cli(
         monkeypatch, tmp_path, capsys, ["list-users"]
     )
 
-    assert "Alex" in output
-    assert "alex@example.com" in output
+    assert "Felix" in output
+    assert "felix@moringa.com" in output
 
 
 def test_add_project_and_task(monkeypatch, tmp_path, capsys):
     """Verify projects and tasks can be created through the CLI."""
     run_cli(
         monkeypatch, tmp_path, capsys,
-        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+        ["add-user", "--name", "Felix", "--email", "felix@moringa.com"],
     )
 
     run_cli(
@@ -67,7 +67,7 @@ def test_complete_task(monkeypatch, tmp_path, capsys):
     """Verify a task can be marked complete."""
     run_cli(
         monkeypatch, tmp_path, capsys,
-        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+        ["add-user", "--name", "Felix", "--email", "felix@moringa.com"],
     )
     run_cli(
         monkeypatch, tmp_path, capsys,
@@ -102,7 +102,7 @@ def test_edit_project(monkeypatch, tmp_path, capsys):
     """Verify that a project can be edited."""
     run_cli(
         monkeypatch, tmp_path, capsys,
-        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+        ["add-user", "--name", "Felix", "--email", "felix@moringa.com"],
     )
 
     run_cli(
@@ -127,7 +127,7 @@ def test_edit_task(monkeypatch, tmp_path, capsys):
     """Verify that a task's status can be edited."""
     run_cli(
         monkeypatch, tmp_path, capsys,
-        ["add-user", "--name", "Alex", "--email", "alex@example.com"],
+        ["add-user", "--name", "Felix", "--email", "felix@moringa.com"],
     )
 
     run_cli(
@@ -158,7 +158,7 @@ def test_rejects_invalid_email(monkeypatch, tmp_path, capsys):
         monkeypatch, tmp_path, capsys,
         [
             "add-user",
-            "--name", "Alex",
+            "--name", "Felix",
             "--email", "invalid-email",
         ],
     )
@@ -175,8 +175,8 @@ def test_rejects_invalid_project_due_date(
         monkeypatch, tmp_path, capsys,
         [
             "add-user",
-            "--name", "Alex",
-            "--email", "alex@example.com",
+            "--name", "Felix",
+            "--email", "felix@moringa.com",
         ],
     )
 

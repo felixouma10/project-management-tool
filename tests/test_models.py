@@ -6,7 +6,7 @@ from models.task import Task
 
 
 def test_user_can_have_multiple_projects():
-    user = User("Alex", "alex@example.com", 1)
+    user = User("Felix", "felix@moringa.com", 1)
     project1 = Project("Website", 101, owner_id=1)
     project2 = Project("CLI Tool", 102, owner_id=1)
 
